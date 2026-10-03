@@ -1,0 +1,192 @@
+<div class="page">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">3-TIER MICROSERVICES DEMO</p>
+      <h1>Microservices Store</h1>
+      <p class="subtitle">
+        Angular + ASP.NET Core + SQL Server
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div *ngIf="message" class="alert success">{{ message }}</div>
+    <div *ngIf="error" class="alert error">{{ error }}</div>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Create User</h2>
+
+        <form (ngSubmit)="createUser()">
+          <label>First name</label>
+          <input
+            name="firstName"
+            [(ngModel)]="user.firstName"
+            required
+            placeholder="Ajay">
+
+          <label>Last name</label>
+          <input
+            name="lastName"
+            [(ngModel)]="user.lastName"
+            required
+            placeholder="Panchal">
+
+          <label>Email</label>
+          <input
+            name="email"
+            type="email"
+            [(ngModel)]="user.email"
+            required
+            placeholder="ajay@example.com">
+
+          <button type="submit">Create User</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Create Order</h2>
+
+        <form (ngSubmit)="createOrder()">
+          <label>User</label>
+          <select name="userId" [(ngModel)]="order.userId" required>
+            <option [ngValue]="0">Select user</option>
+            <option *ngFor="let item of users" [ngValue]="item.id">
+              {{ item.firstName }} {{ item.lastName }} (#{{ item.id }})
+            </option>
+          </select>
+
+          <label>Product</label>
+          <input
+            name="productName"
+            [(ngModel)]="order.productName"
+            required
+            placeholder="Laptop">
+
+          <label>Quantity</label>
+          <input
+            name="quantity"
+            type="number"
+            min="1"
+            [(ngModel)]="order.quantity"
+            required>
+
+          <label>Unit price</label>
+          <input
+            name="unitPrice"
+            type="number"
+            min="0"
+            step="0.01"
+            [(ngModel)]="order.unitPrice"
+            required>
+
+          <button type="submit">Create Order</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-header">
+        <h2>Users</h2>
+        <button class="secondary" (click)="loadUsers()">Refresh</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Created</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of users">
+              <td>{{ item.id }}</td>
+              <td>{{ item.firstName }} {{ item.lastName }}</td>
+              <td>{{ item.email }}</td>
+              <td>{{ item.createdAt | date:'medium' }}</td>
+              <td>
+                <button class="danger" (click)="deleteUser(item.id!)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="users.length === 0">
+              <td colspan="5" class="empty">No users found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-header">
+        <h2>Orders</h2>
+        <button class="secondary" (click)="loadOrders()">Refresh</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Unit price</th>
+              <th>Total</th>
+              <th>Created</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of orders">
+              <td>{{ item.id }}</td>
+              <td>{{ getUserName(item.userId) }}</td>
+              <td>{{ item.productName }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.unitPrice | number:'1.2-2' }}</td>
+              <td>{{ (item.quantity * item.unitPrice) | number:'1.2-2' }}</td>
+              <td>{{ item.createdAt | date:'medium' }}</td>
+              <td>
+                <button class="danger" (click)="deleteOrder(item.id!)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="orders.length === 0">
+              <td colspan="8" class="empty">No orders found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="architecture card">
+      <h2>Application Architecture</h2>
+
+      <div class="architecture-flow">
+        <span>Angular</span>
+        <strong>→</strong>
+        <span>User Service</span>
+        <strong>→</strong>
+        <span>Users DB</span>
+      </div>
+
+      <div class="architecture-flow">
+        <span>Angular</span>
+        <strong>→</strong>
+        <span>Order Service</span>
+        <strong>→</strong>
+        <span>Orders DB</span>
+      </div>
+    </section>
+  </main>
+</div>
